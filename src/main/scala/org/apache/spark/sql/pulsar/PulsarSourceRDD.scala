@@ -76,7 +76,7 @@ private[pulsar] abstract class PulsarSourceRDDBase(
 
       var currentMessage: Message[_] = _
       var currentId: MessageId = _
-
+      if (startOffset.isInstanceOf[UserProvidedMessageId]) logInfo("miao miao")
       try {
         if (!startOffset
             .isInstanceOf[UserProvidedMessageId] && startOffset != MessageId.earliest) {
@@ -94,6 +94,7 @@ private[pulsar] abstract class PulsarSourceRDDBase(
                 s"Potential Data Loss: intended to start at $startOffset, " +
                   s"actually we get $currentId")
             }
+            logInfo(s"panda angry start $startOffset and read start $currentId")
 
             (startOffset, currentId) match {
               case (_: BatchMessageIdImpl, _: BatchMessageIdImpl) =>

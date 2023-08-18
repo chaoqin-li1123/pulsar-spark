@@ -14,8 +14,9 @@
 package org.apache.spark.sql.pulsar
 
 import java.nio.charset.StandardCharsets.UTF_8
+import java.sql.Date
 import java.text.SimpleDateFormat
-import java.util.{Date, Locale}
+import java.util.Locale
 import scala.reflect.ClassTag
 import org.apache.pulsar.client.api.schema.GenericRecord
 import org.apache.pulsar.client.api.{MessageId, Schema}
@@ -306,7 +307,7 @@ abstract class PulsarSourceSuiteBase extends PulsarSourceTest {
     check[Date](
       Schema.DATE.getSchemaInfo,
       dateSeq,
-      Encoders.bean(classOf[Date]),
+      Encoders.DATE,
       dateFormat.format(_))
   }
 

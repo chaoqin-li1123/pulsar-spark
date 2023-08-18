@@ -14,22 +14,17 @@
 package org.apache.spark.sql.pulsar
 
 import java.util.concurrent.ConcurrentLinkedQueue
-
 import org.apache.pulsar.client.admin.PulsarAdmin
 import org.apache.spark.SparkException
 import org.apache.spark.sql.ForeachWriter
-import org.apache.spark.sql.execution.streaming.StreamingExecutionRelation
+import org.apache.spark.sql.execution.streaming.{StreamExecution, StreamingExecutionRelation}
 import org.apache.spark.sql.functions.{count, window}
-import org.apache.spark.sql.pulsar.PulsarOptions.{ServiceUrlOptionKey, TopicPattern}
+import org.apache.spark.sql.pulsar.PulsarOptions.{FailOnDataLossOptionKey, ServiceUrlOptionKey, StartingOffsetsOptionKey, StartingTime, TopicPattern}
+import org.apache.spark.sql.streaming.Trigger
 import org.apache.spark.sql.streaming.Trigger.ProcessingTime
 import org.apache.spark.util.Utils
 
 class PulsarMicroBatchV1SourceSuite extends PulsarMicroBatchSourceSuiteBase {
-
-  override def beforeAll(): Unit = {
-    super.beforeAll()
-  }
-
   test("V1 Source is used by default") {
     val topic = newTopic()
 
@@ -43,7 +38,7 @@ class PulsarMicroBatchV1SourceSuite extends PulsarMicroBatchSourceSuiteBase {
       makeSureGetOffsetCalled,
       AssertOnQuery { query =>
         query.logicalPlan.collect {
-          case StreamingExecutionRelation(_: PulsarSource, _) => true
+          case StreamingExecutionRelation(_: PulsarSource, _, _) => true
         }.nonEmpty
       }
     )

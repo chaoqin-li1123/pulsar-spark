@@ -71,6 +71,10 @@ private[pulsar] class PulsarSource(
     // Make sure initialTopicOffsets is initialized
     initialTopicOffsets
 
+    initialTopicOffsets.topicOffsets.foreach(pair =>
+      if (!pair._2.isInstanceOf[UserProvidedMessageId]){
+        logInfo(s"happy panda ${pair._2}")
+      })
     logInfo(s"getBatch called with start = $start, end = $end")
     val endTopicOffsets = SpecificPulsarOffset.getTopicOffsets(end)
 
